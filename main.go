@@ -72,6 +72,8 @@ func (s *Server) handleMessage(msg Message) error {
 	case SetCommand:
 		return s.kv.Set(v.key, v.value)
 		//slog.Info("seting key into hashtable", "key=", v.key, "value=", v.value)
+	case HelloCommand:
+		fmt.Println("this is the hello command from the client!")
 	}
 	return nil
 }

@@ -10,6 +10,10 @@ import (
 	"time"
 )
 
+func TestRedisClient(t *testing.T) {
+
+}
+
 func TestServerWithMultiClient(t *testing.T) {
 	server := NewServer(Config{})
 	// Booting the server
