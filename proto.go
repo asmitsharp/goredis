@@ -3,33 +3,43 @@ package main
 import (
 	"bytes"
 	"fmt"
+
+	"github.com/tidwall/resp"
 )
 
 const (
-	CommandSet   = "SET"
-	CommandGet   = "GET"
-	CommandHello = "hello"
+	CommandSET    = "set"
+	CommandGET    = "get"
+	CommandHELLO  = "hello"
+	CommandClient = "client"
 )
 
-type Command interface{}
+type Command interface {
+}
 
 type SetCommand struct {
-	key, value []byte
+	key, val []byte
 }
-type GetCommand struct {
-	key, value []byte
+
+type ClientCommand struct {
+	value string
 }
 
 type HelloCommand struct {
 	value string
 }
 
-func respWriteMap(m map[string]string) string {
-	buf := bytes.Buffer{}
+type GetCommand struct {
+	key []byte
+}
+
+func respWriteMap(m map[string]string) []byte {
+	buf := &bytes.Buffer{}
 	buf.WriteString("%" + fmt.Sprintf("%d\r\n", len(m)))
+	rw := resp.NewWriter(buf)
 	for k, v := range m {
-		buf.WriteString(fmt.Sprintf("+%s\r\n", k))
-		buf.WriteString(fmt.Sprintf(":%s\r\n", v))
+		rw.WriteString(k)
+		rw.WriteString(":" + v)
 	}
-	return buf.String()
+	return buf.Bytes()
 }
